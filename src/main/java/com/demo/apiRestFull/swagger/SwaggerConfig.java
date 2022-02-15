@@ -1,0 +1,56 @@
+package com.demo.apiRestFull.swagger;
+
+import com.fasterxml.classmate.TypeResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+/**
+ * class Swagger2UiConfiguration
+ *
+ * @author mecao@main <georgesgkm007@gmail.com>
+ * @copyright 2022
+ */
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private TypeResolver typeResolver;
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.demo.apiRestFull"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("API RestFull Reference").version("1.0.0")
+                .description("regroupe all api ")
+                .contact(new Contact("Gkm007"," ","georgesgkm007@gmail.com"))
+                .build();
+    }
+
+
+
+}
